@@ -3,6 +3,7 @@
 #include <QPaintDevice>
 #include <QPaintEngine>
 #include <QMouseEvent>
+#include <QDebug>
 
 ImageViewerLabel::ImageViewerLabel(QWidget *parent)
     : QLabel{parent}
@@ -18,10 +19,24 @@ void ImageViewerLabel::paintEvent(QPaintEvent *event)
 
 void ImageViewerLabel::mousePressEvent(QMouseEvent *event)
 {
+    mousePressedPoint = event->pos();
+    cropRectPressedRect = cropRect;
+
     if (cropRect.contains(event->pos())) {
         isPressed = true;
         mousePressedPoint = event->pos();
-        cropRectPressedPoint = cropRect.topLeft();
+        cropRectPressedRect = cropRect;
+    }
+
+    QRect handleRect;
+    handleRect.setRect(cropRect.x()+cropRect.width()-16,
+                       cropRect.y()+cropRect.height()-16,
+                       16, 16);
+
+    if (handleRect.contains(event->pos())) {
+        isResizeState = true;
+    } else {
+        isResizeState = false;
     }
 }
 
@@ -37,11 +52,20 @@ void ImageViewerLabel::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
-    QPoint differencePos = event->pos() - mousePressedPoint;
+    QPoint mousePointDifference = event->pos() - mousePressedPoint;
 
-    cropRect.setRect(cropRectPressedPoint.x() + differencePos.x(),
-                     cropRectPressedPoint.y() + differencePos.y(),
-                     cropRect.width(), cropRect.height());
+    if (isResizeState) {
+        cropRect.setRect(cropRect.x(),
+                         cropRect.y(),
+                         cropRectPressedRect.width() + mousePointDifference.x(),
+                         cropRectPressedRect.height() + mousePointDifference.y());
+
+    } else {
+        cropRect.setRect(cropRectPressedRect.x() + mousePointDifference.x(),
+                         cropRectPressedRect.y() + mousePointDifference.y(),
+                         cropRect.width(),
+                         cropRect.height());
+    }
 
     repaint();
 }
