@@ -21,4 +21,7 @@ private:
 
     QRect cropRect;
     bool isPressed;
+
+    QPoint mousePressedPoint;
+    QPoint cropRectPressedPoint;
 };

@@ -19,10 +19,10 @@ void ImageViewerLabel::paintEvent(QPaintEvent *event)
 
 void ImageViewerLabel::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
-
     if (cropRect.contains(event->pos())) {
         isPressed = true;
+        mousePressedPoint = event->pos();
+        cropRectPressedPoint = cropRect.topLeft();
     }
 
     qDebug() << __FUNCTION__;
@@ -45,7 +45,9 @@ void ImageViewerLabel::mouseMoveEvent(QMouseEvent *event)
         qDebug() << event->pos();
     }
 
-    cropRect.setRect(event->pos().x(), event->pos().y(), cropRect.width(), cropRect.height());
+    QPoint differencePos = event->pos() - mousePressedPoint;
+
+    cropRect.setRect(cropRectPressedPoint.x() + differencePos.x(), cropRectPressedPoint.y() + differencePos.y(), cropRect.width(), cropRect.height());
 
     repaint();
 }
