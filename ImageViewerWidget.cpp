@@ -2,6 +2,7 @@
 #include "ui_ImageViewerWidget.h"
 #include <QFileDialog>
 #include <QPixmap>
+#include <QDebug>
 
 ImageViewerWidget::ImageViewerWidget(QWidget *parent)
     : QWidget{parent}
@@ -16,6 +17,9 @@ void ImageViewerWidget::onUploadButtonClicked()
 {
     QString path = QFileDialog::getOpenFileName(this, "", "", "");
     QPixmap pixmap(path);
-    pixmap = pixmap.scaled(ui->imageViewerLabel->size(), Qt::KeepAspectRatio);
-    ui->imageViewerLabel->setPixmap(pixmap);
+
+    QPixmap scaled = pixmap.scaled(ui->imageViewerLabel->size(), Qt::KeepAspectRatio);
+    ui->imageViewerLabel->setMinimumSize(scaled.size());
+    ui->imageViewerLabel->setMaximumSize(scaled.size());
+    ui->imageViewerLabel->setPixmap(scaled);
 }
