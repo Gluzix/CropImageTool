@@ -1,5 +1,7 @@
 #include "ImageViewerWidget.h"
 #include "ui_ImageViewerWidget.h"
+#include <QFileDialog>
+#include <QPixmap>
 
 ImageViewerWidget::ImageViewerWidget(QWidget *parent)
     : QWidget{parent}
@@ -12,5 +14,8 @@ ImageViewerWidget::ImageViewerWidget(QWidget *parent)
 
 void ImageViewerWidget::onUploadButtonClicked()
 {
-
+    QString path = QFileDialog::getOpenFileName(this, "", "", "");
+    QPixmap pixmap(path);
+    pixmap = pixmap.scaled(ui->imageViewerLabel->size(), Qt::KeepAspectRatio);
+    ui->imageViewerLabel->setPixmap(pixmap);
 }
