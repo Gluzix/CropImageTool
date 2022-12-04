@@ -9,13 +9,15 @@ class ImageViewerLabel : public QLabel
 public:
     ImageViewerLabel(QWidget *parent = nullptr);
 
+    QPixmap getCroppedPixmap();
+
+
 protected:
     void paintEvent(QPaintEvent *event) override;
 
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-
 private:
     void drawOverlay();
 

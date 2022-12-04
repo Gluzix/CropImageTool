@@ -14,6 +14,7 @@ public:
 
 private slots:
     void onUploadButtonClicked();
+    void onSaveButtonClicked();
 
 private:
     Ui::ImageViewerWidget *ui;

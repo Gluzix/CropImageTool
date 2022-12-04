@@ -11,6 +11,11 @@ ImageViewerLabel::ImageViewerLabel(QWidget *parent)
     cropRect.setRect(this->width()/2, this->height()/2, 200, 400);
 }
 
+QPixmap ImageViewerLabel::getCroppedPixmap()
+{
+    return this->pixmap().copy(cropRect);
+}
+
 void ImageViewerLabel::paintEvent(QPaintEvent *event)
 {
     QLabel::paintEvent(event);
