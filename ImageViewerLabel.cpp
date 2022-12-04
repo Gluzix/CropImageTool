@@ -2,7 +2,6 @@
 #include <QPainter>
 #include <QPaintDevice>
 #include <QPaintEngine>
-#include <QDebug>
 #include <QMouseEvent>
 
 ImageViewerLabel::ImageViewerLabel(QWidget *parent)
@@ -24,15 +23,12 @@ void ImageViewerLabel::mousePressEvent(QMouseEvent *event)
         mousePressedPoint = event->pos();
         cropRectPressedPoint = cropRect.topLeft();
     }
-
-    qDebug() << __FUNCTION__;
 }
 
 void ImageViewerLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
     isPressed = false;
-    qDebug() << __FUNCTION__;
 }
 
 void ImageViewerLabel::mouseMoveEvent(QMouseEvent *event)
@@ -41,13 +37,11 @@ void ImageViewerLabel::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
-    if (cropRect.contains(event->pos())) {
-        qDebug() << event->pos();
-    }
-
     QPoint differencePos = event->pos() - mousePressedPoint;
 
-    cropRect.setRect(cropRectPressedPoint.x() + differencePos.x(), cropRectPressedPoint.y() + differencePos.y(), cropRect.width(), cropRect.height());
+    cropRect.setRect(cropRectPressedPoint.x() + differencePos.x(),
+                     cropRectPressedPoint.y() + differencePos.y(),
+                     cropRect.width(), cropRect.height());
 
     repaint();
 }
@@ -67,6 +61,11 @@ void ImageViewerLabel::drawOverlay()
     painter.drawRect(point.x(), point.y(),
                      this->width(), this->height());
 
+    QPen pen;
+    pen.setColor(Qt::white);
+    pen.setStyle(Qt::PenStyle::DashLine);
+    pen.setWidth(2);
+    painter.setPen(pen);
     painter.setBrush(pixmap());
     painter.drawRect(cropRect);
 }
